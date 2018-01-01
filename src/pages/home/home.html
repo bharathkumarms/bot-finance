@@ -1,0 +1,20 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Home</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-list>
+
+    <ion-item navPush="Chat"
+              [navParams]="toUser">
+      <ion-avatar item-left>
+        <img src="./assets/to-user.jpg">
+      </ion-avatar>
+      <h2>Bot Finance</h2>
+      <p>Tap to chat with me!</p>
+    </ion-item>
+  </ion-list>
+</ion-content>
