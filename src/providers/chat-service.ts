@@ -16,6 +16,14 @@ export class ChatMessage {
     status: string;
 }
 
+export class Answers{
+    answers:Array<Answer>
+}
+
+export class Answer{
+    answer: string
+}
+
 export class UserInfo {
     id: string;
     name?: string;
@@ -66,11 +74,15 @@ export class ChatService {
         const headers = new HttpHeaders({'Ocp-Apim-Subscription-Key':'e073edc6811a4a2dbbce16094b1328cd'});
 
         return this.http.post("https://westus.api.cognitive.microsoft.com/qnamaker/v2.0/knowledgebases/2612cdfb-908c-40ff-8d54-14910d6abf2d/generateAnswer", { 'question': msg.message }, { headers: headers })
-        .map(res => res)
+        .map(res => JSON.stringify(res))
         .map(output => {
-            mockMsg.message = output.answers[0].answer;
+            var parsedValue = JSON.parse(output)
+            mockMsg.message = parsedValue['answers'][0].answer;
             return mockMsg;
-        }).toPromise();
+        }).toPromise().catch(e=>{
+            mockMsg.message = "Please try in 30-60sec. Too many request or check your network.";
+            return mockMsg;
+        });
     }
 
     getUserInfo(): Promise<UserInfo> {
