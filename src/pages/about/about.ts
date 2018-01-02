@@ -7,5 +7,7 @@ import { IonicPage } from 'ionic-angular';
   templateUrl: 'about.html'
 })
 export class AboutPage {
-
+  contact(){
+    window.open(`mailto:${'v.bharathkumar@gmail.com'}`, '_system');
+  }
 }
