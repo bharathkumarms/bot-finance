@@ -104,9 +104,10 @@ export class Chat {
         }
 
         this.chatService.sendMsg(newMsg)
-        .then(() => {
+        .then((output) => {
             let index = this.getMsgIndexById(id);
             if (index !== -1) {
+                this.pushNewMsg(output);
                 this.msgList[index].status = 'success';
             }
         })

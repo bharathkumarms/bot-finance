@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Events } from 'ionic-angular';
 import { map } from 'rxjs/operators/map';
-import { HttpClient } from "@angular/common/http";
+import { HttpClient,HttpHeaders } from "@angular/common/http";
 import {Observable} from "rxjs/Observable";
+import 'rxjs/add/operator/map'
 
 export class ChatMessage {
     messageId: string;
@@ -52,14 +53,30 @@ export class ChatService {
     }
 
     sendMsg(msg: ChatMessage) {
-        return new Promise(resolve => setTimeout(() => resolve(msg), Math.random() * 1000))
-        .then(() => this.mockNewMsg(msg));
+        const mockMsg: ChatMessage = {
+            messageId: Date.now().toString(),
+            userId: '210000198410281948',
+            userName: 'Bot Finance',
+            userAvatar: './assets/to-user.jpg',
+            toUserId: '140000198202211138',
+            time: Date.now(),
+            message: 'test',
+            status: 'success'}
+
+        const headers = new HttpHeaders({'Ocp-Apim-Subscription-Key':'e073edc6811a4a2dbbce16094b1328cd'});
+
+        return this.http.post("https://westus.api.cognitive.microsoft.com/qnamaker/v2.0/knowledgebases/2612cdfb-908c-40ff-8d54-14910d6abf2d/generateAnswer", { 'question': msg.message }, { headers: headers })
+        .map(res => res)
+        .map(output => {
+            mockMsg.message = output.answers[0].answer;
+            return mockMsg;
+        }).toPromise();
     }
 
     getUserInfo(): Promise<UserInfo> {
         const userInfo: UserInfo = {
             id: '140000198202211138',
-            name: 'Luff',
+            name: 'You',
             avatar: './assets/user.jpg'
         };
         return new Promise(resolve => resolve(userInfo));
